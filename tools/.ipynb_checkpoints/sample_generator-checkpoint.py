@@ -52,7 +52,7 @@ class generate_samples:
         #Find the max length for the sentences
         max_len = max(lengths)
         #If the specified padding length is shorter than the max length
-        max_len = self.__max_len if max_len > self.__max_len else max_len
+        max_len = self.__max_len #if max_len > self.__max_len else max_len
 
         #Create input and label
         #Note, unknow words are mapped to '0'
