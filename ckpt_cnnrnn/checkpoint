@@ -1,2 +1,0 @@
-model_checkpoint_path: "cnnrnn.ckpt.index"
-all_model_checkpoint_paths: "cnnrnn.ckpt.index"
