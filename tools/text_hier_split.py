@@ -6,6 +6,60 @@ import string
 from time import time
 from nltk.tokenize import WordPunctTokenizer
 from nltk.stem import WordNetLemmatizer
+import spacy
+class text2words:
+    '''
+    Using spacy tool to tokenize texts into sentences or words
+    '''
+    def __init__(self, texts):
+        '''
+        texts: a list of strings, utf-8 encoding
+        '''
+        self.__nlp__ = spacy.load('en')
+        self.__texts__ = texts
+        
+    def __text2sents__(self, text):
+        '''
+        Split a text into sentences
+        '''
+        text = self.__nlp__(text)
+        #SPlit into sentences
+        sents = list(text.sents)
+        sents_words = list(map(self.__sent2words__, sents))
+        return sents_words
+    
+    def __sent2words__(self, sent):
+        '''
+        Split spacy sentence into spacy tokens
+        '''
+        sent_words = list(map(self.__to_lower__, sent))
+        return sent_words
+    
+    def __text2words__(self, text):
+        '''
+        Split a text into words
+        '''
+        text = self.__nlp__(text)
+        words = list(map(self.__to_lower__, text))
+        return words
+        
+    def __to_lower__(self, word):
+        '''
+        Word: spacy token
+        '''
+        return word.lemma_.lower()
+    
+    def proceed(self, is_hierarchical=False):
+        '''
+        Execute the task
+        '''
+        tokens = []
+        if is_hierarchical:
+            tokens = map(self.__text2sents__, self.__texts__)
+        else:
+            tokens = map(self.__text2words__, self.__texts__)
+        return tokens
+
 class text2sents:
     '''
     Split a text into sentences
@@ -41,7 +95,7 @@ class text2sents:
         return text.lower()
     
     def __split_text__(self, text):
-        text = self.__preprocess__(text)
+        #text = self.__preprocess__(text)
         sents = self.__tokenizer.tokenize(text)
         return sents
 
@@ -54,10 +108,11 @@ class text2sents:
         #sents = [self.__split__(text) for text in self.__texts]
         print('Start tokenizing....')
         start = time()
-        text_sents = list(map(self.__split_text__, self.__texts))
         #Split sentences into words
         if is_hierarchical:
             text_sents = list(map(self.__split_sent__, text_sents))
+        else:
+            text_sents = list(map(self.__split_text__, self.__texts))
         end = time()
         print('Processing Finished! Timing: ', round(end-start, 3))
         return text_sents
@@ -103,7 +158,7 @@ class sent2words:
         Split a sentence into words
         Lemmatize words
         '''
-        sent = self.__preprocess__(sent)
+        #sent = self.__preprocess__(sent)
         words = self.__tokenizer(sent)    
         words = list(map(self.__lemmatizer, words))
         return words
