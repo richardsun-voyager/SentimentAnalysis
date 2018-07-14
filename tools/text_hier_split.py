@@ -53,11 +53,15 @@ class text2words:
         '''
         Execute the task
         '''
+        print('Tokenization starting...')
+        start = time()
         tokens = []
         if is_hierarchical:
             tokens = map(self.__text2sents__, self.__texts__)
         else:
             tokens = map(self.__text2words__, self.__texts__)
+        end = time()
+        print('Tokenization Finished! Timing: ', round(end-start, 3))
         return tokens
 
 class text2sents:

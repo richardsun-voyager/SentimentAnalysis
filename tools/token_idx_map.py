@@ -14,10 +14,11 @@ class token2idx:
         texts: a list of words or lists or a list of textblob objects
         vocab_size: length of the vocabulary
         '''
-        assert isinstance(texts, list) == True
-        self.__is_textblob = isinstance(texts[0], TextBlob)
         #sentences
-        self.__texts = texts
+        if isinstance(texts, list):
+            self.__texts = texts
+        else:
+            self.__texts = list(texts)
         self.__vocab_size = vocab_size
         self.__word_idx_dict = None
         self.__idx_word_dict = None
@@ -32,10 +33,8 @@ class token2idx:
         #Flatten word lists
         print('Start mapping words to IDs....')
         start = time()
-        if not self.__is_textblob:
-            words_all = list(self.__flatten__(self.__texts))
-        else:
-            words_all = self.__flatten_textblob__(self.__texts)
+        words_all = list(self.__flatten__(self.__texts))
+        
         #Calculate word frequences
         word_freq_pair = Counter(words_all)
         #Select the most common ones
@@ -68,18 +67,6 @@ class token2idx:
         Map text of words into idx, this is for testing data
         '''
         texts_idx = []
-        if self.__is_textblob:
-            for blob in texts:
-                if ignore_sent:
-                    word_idx = list(map(self.__word2idx__, blob.words))
-                    texts_idx.append(word_idx)
-                else:
-                    text_idx = []
-                    for sent in blob.sentences:
-                        sent_idx = list(map(self.__word2idx__, sent.words))
-                        text_idx.append(sent_idx)
-                    texts_idx.append(text_idx)
-            return texts_idx
         #Traverse each text
         for text in texts:
             text_idx = []
